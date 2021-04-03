@@ -2,6 +2,7 @@
 
 // Deklarasi variabel global
 const form = document.getElementById("form");
+const titleForm = document.getElementById("title-form");
 const sectionTable = document.getElementById("section-table");
 const captionTable = document.getElementById("caption-table");
 const buttonForm = document.getElementById("btn_cu");
@@ -140,11 +141,13 @@ function setNewValue(indexUser, keyDataParams) {
 function createData(dataStoreParams) {
   // tutup bagian tabel dan tampilkan bagian form
   hideAllAlert();
+  removeHistoryInput();
   handlingContent(sectionTable, "none");
   handlingContent(form, "block");
 
-  // set text button form
+  // set text button form and title form
   setText(buttonForm, "Create");
+  setText(titleForm, "Membuat data mahasiswa");
 
   // ketika button diklik, buat data
   buttonForm.onclick = function () {
@@ -250,6 +253,7 @@ function updateData(dataStoreParams) {
       handlingContent(sectionTable, "none");
       handlingContent(form, "block");
       setText(buttonForm, "Update");
+      setText(titleForm, "Memperbarui data mahasiswa");
 
       // daftar key yang ada di data.
       const keyData = ["npm", "nama", "email", "universitas", "jurusan", "ipk"];
