@@ -13,7 +13,7 @@ Public web pages untuk forum studi setiap sub divisi.
 
 #### Sistem Cerdas
 - Yoga 
-- Bentar
+- BentarRaharja
 
 ## Demo
 
