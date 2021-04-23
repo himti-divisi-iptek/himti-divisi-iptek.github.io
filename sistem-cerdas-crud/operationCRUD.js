@@ -54,7 +54,7 @@ const dataStore = [
 let data = {};
 
 // Run Function to read all data.
-readData(dataStore);
+read(dataStore);
 
 // ====================================== SUPPORT FUNCTION =======================================
 
