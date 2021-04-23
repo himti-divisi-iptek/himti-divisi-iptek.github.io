@@ -1,15 +1,26 @@
-// CRUD
+/**
+ * Author: Yoga Dwi Prasetyo
+ * License: Apache-2.0 License
+ * Source Code: https://github.com/himti-divisi-iptek/himti-divisi-iptek.github.io/tree/main/sistem-cerdas-crud
+ */
 
-// Deklarasi variabel global
+// Variable Global FORM
 const form = document.getElementById("form");
 const titleForm = document.getElementById("title-form");
-const sectionTable = document.getElementById("section-table");
-const captionTable = document.getElementById("caption-table");
 const buttonForm = document.getElementById("btn_cu");
+
+// Variable Global ALERT
 const alertWarning = document.getElementById("a-warning");
 const alertSuccess = document.getElementById("a-success");
+
+// Variable Global TABLE
+const sectionTable = document.getElementById("section-table");
+const captionTable = document.getElementById("caption-table");
 const tableBody = document.getElementsByTagName("tbody")[0];
 const dataInTable = document.getElementsByClassName("data");
+
+// daftar property yang ada di data objek.
+const propertyObj = ["npm", "nama", "email", "universitas", "jurusan", "ipk"];
 
 // tempat penyimpanan seluruh data
 const dataStore = [
@@ -25,7 +36,7 @@ const dataStore = [
     npm: "177064516100",
     nama: "Mawar",
     email: "mawar@gmail.com",
-    universitas: "Universitas Nasional",
+    universitas: "Universitas Indonesia",
     jurusan: "Ilmu Komunikasi",
     ipk: "3.85",
   },
@@ -33,7 +44,7 @@ const dataStore = [
     npm: "187064516112",
     nama: "Indah",
     email: "indah@gmail.com",
-    universitas: "Universitas Nasional",
+    universitas: "Universitas Tri Sakti",
     jurusan: "Hukum",
     ipk: "3.88",
   },
@@ -42,146 +53,184 @@ const dataStore = [
 // tempat penyimpanan satu data
 let data = {};
 
-// Run function Read all data.
+// Run Function to read all data.
 readData(dataStore);
 
-// Hide all alert
+// ====================================== SUPPORT FUNCTION =======================================
+
+/**
+ * Kosongkan objek penyimpanan satu data.
+ * untuk menyimpan data yang lain.
+ */
+function resetObjData() {
+  data = {};
+}
+
+/**
+ * Menyembunyikan seluruh element alert
+ */
 function hideAllAlert() {
   const action = "none";
   handlingContent(alertWarning, action);
   handlingContent(alertSuccess, action);
 }
 
-// handling alert warning and success
+/**
+ * Tampil atau sembunyi-kan element alert.
+ *
+ * @param object alertElem
+ * @param string msgAlert
+ * @param string action default is "block".
+ */
 function handlingAlert(alertElem, msgAlert, action = "block") {
   setText(alertElem, msgAlert);
   handlingContent(alertElem, action);
-  return;
 }
 
-// handling content show & hide
+/**
+ * Tampil atau sembunyi-kan element html.
+ *
+ * @param object element
+ * @param string action "block" | "none"
+ */
 function handlingContent(element, action) {
   element.style.display = action;
 }
 
-// set text button form
+/**
+ * Memberikan text ke element html.
+ *
+ * @param object element
+ * @param string text
+ */
 function setText(element, text = "") {
   element.innerText = text;
 }
 
-// mengambil value dari form
-// dan set kedalam object variable data.
-function setValue(elements) {
+/**
+ * Membuat data objek baru dari value form.
+ *
+ * @param object elements
+ */
+function makeDataObj(elements) {
   for (let i = 0; i < elements.length - 1; i++) {
     data[elements[i].name] = elements[i].value;
   }
 }
 
-// menghapus property object jika value kosong.
-function valueIsEmptyDeleted(obj) {
-  for (let key in obj) {
-    let isValueEmpty = obj[key] === "";
-    if (isValueEmpty) {
-      delete obj[key];
-    }
-  }
-}
-
-// mengecek value form kosong,
-// kalau kosong "alert bahwa form tidak boleh kosong".
-function isValueFormAvailable(obj) {
-  // check value property object data
-  valueIsEmptyDeleted(obj);
-
-  // daftar key yang ada di data.
-  const keyData = ["npm", "nama", "email", "universitas", "jurusan", "ipk"];
-
-  // di cek apakah propertynya lengkap.
-  let result = false;
-  for (let i = 0; i < keyData.length; i++) {
-    result = obj.hasOwnProperty(keyData[i]);
-    if (!result) {
-      break;
-    }
-  }
-
-  // hasil cek property objek.
-  return result;
-}
-
-// hapus history input form create
+/**
+ * Menghapus history input form.
+ */
 function removeHistoryInput() {
   for (let i = 0; i < form.length - 1; i++) {
     form[i].value = "";
   }
 }
 
-// check total data yang disimpan
+/**
+ * Mengecek apakah isi penyimpanan data kosong.
+ *
+ * @returns boolean
+ */
 function isDataStoreEmpty() {
   return dataStore.length === 0;
 }
 
-// get old data value.
-function getOldValue(indexUser, keyDataParams) {
-  // ambil semua data dari satu user.
+/**
+ * Pengecekan input value,
+ * jika value ada yang kosong, return true,
+ * jika value terisi semua, return false.
+ *
+ * @returns boolean
+ */
+function isInputEmpty() {
+  let isEmpty = false;
   for (let i = 0; i < form.length - 1; i++) {
-    form[i].value = dataStore[indexUser][keyDataParams[i]];
+    if (form[i].value === "") {
+      isEmpty = true;
+      break;
+    }
+  }
+
+  return isEmpty;
+}
+
+/**
+ * Mengambil sebuah data mahasiswa yang ingin diupdate.
+ *
+ * @param integer indexUser
+ */
+function getOldValue(indexUser) {
+  for (let i = 0; i < form.length - 1; i++) {
+    form[i].value = dataStore[indexUser][propertyObj[i]];
   }
 }
 
-// set old data value.
-function setNewValue(indexUser, keyDataParams) {
-  // ambil semua data dari satu user.
+/**
+ * Memperbarui satu data mahasiswa.
+ *
+ * @param integer indexUser
+ */
+function savingUpdate(indexUser) {
   for (let i = 0; i < form.length - 1; i++) {
-    dataStore[indexUser][keyDataParams[i]] = form[i].value;
+    dataStore[indexUser][propertyObj[i]] = form[i].value;
   }
 }
 
-// membuat data
-function createData(dataStoreParams) {
-  // tutup bagian tabel dan tampilkan bagian form
+// ====================================== CRUD FUNCTION ============================================
+
+/**
+ * Membuat data baru dan menyimpannya.
+ *
+ * @param array dataStoreParams
+ */
+function create(dataStoreParams) {
   hideAllAlert();
   removeHistoryInput();
+
   handlingContent(sectionTable, "none");
   handlingContent(form, "block");
 
-  // set text button form and title form
-  setText(buttonForm, "Create");
+  setText(buttonForm, "Membuat Data");
   setText(titleForm, "Membuat data mahasiswa");
 
-  // ketika button diklik, buat data
+  // Ketika button diklik, membuat data baru atau tampilkan alert.
   buttonForm.onclick = function () {
-    setValue(form);
-
-    // jika Object mempunyai property lengkap, object disimpan
-    if (!isValueFormAvailable(data)) {
+    if (isInputEmpty()) {
       const message = "Form tidak boleh kosong!";
       handlingAlert(alertWarning, message);
       return;
     }
 
-    // data form disimpan ke array.
+    // Membuat new data object.
+    makeDataObj(form);
+
+    // Menyimpan data.
     dataStoreParams.push(data);
 
-    // kosongkan input value.
+    resetObjData();
     removeHistoryInput();
 
-    // tampilkan data.
+    // tampilkan data dan alert success.
     readData(dataStoreParams);
+    handlingAlert(alertSuccess, "Data berhasil dibuat!");
   };
 
-  // tutup alert warning.
   handlingContent(alertWarning, "none");
 }
 
-// membaca data
-function readData(dataStoreParams) {
-  // tutup semua form dan ubah caption table
-  // hideAllAlert();
+/**
+ * Membaca seluruh data dari penyimpanan.
+ *
+ * @param array dataStoreParams
+ * @returns void
+ */
+function read(dataStoreParams) {
   handlingContent(form, "none");
   setText(captionTable);
 
-  // jika data store empty tampilkan alert warning.
+  // jika data store empty tampilkan alert warning
+  // dan sembunyikan bagian tabel.
   if (isDataStoreEmpty()) {
     const message = "Data belum ada! Silahkan membuatnya.";
     handlingAlert(alertWarning, message);
@@ -197,130 +246,114 @@ function readData(dataStoreParams) {
   const openTableHead = '<th scope="row">';
   const closeTableHead = "</th>";
 
-  // Elements untuk table row.
+  // Elements untuk table data.
   const openTableData = "<td>";
   const closeTableData = "</td>";
 
-  // Seluruh element table, seperti tr, th, dan td.
+  // Penggabungan seluruh element table, seperti tr, th, dan td.
   let allElementsTable = "";
 
-  // Jika data store mempunyai data, tampilkan semuanya.
-  // looping untuk membuat element baru.
   for (let index in dataStoreParams) {
     // mengubah awal data menjadi 1.
     let nomerData = parseInt(index) + 1;
 
-    // gabung open element table row dan table head ke semua element tabel.
+    // Penggabungan element tr dan th
     allElementsTable += openTableRow;
     allElementsTable += `${openTableHead}${nomerData}${closeTableHead}`;
 
-    // Looping untuk mengambil value.
+    // Looping satu data pada index tertentu.
+    // Penggabungan element td ke tr dan th.
     for (let key in dataStoreParams[index]) {
-      // mengambil value dari dataStoreParams
       let valueData = dataStoreParams[index][key];
-
-      // gabung table data ke table row.
       allElementsTable += `${openTableData}${valueData}${closeTableData}`;
     }
 
-    // gabung semua element table row, head, dan data.
+    // Menggabung seluruh element tr, th, dan td.
     allElementsTable += closeTableRow;
   }
 
   // tempelkan semua element table ke table body.
   tableBody.innerHTML = allElementsTable;
 
-  // tampilkan data/table data
   handlingContent(sectionTable, "block");
 }
 
-// memperbarui data
-function updateData(dataStoreParams) {
-  // tampilkan data dan ubah text caption table.
+/**
+ * Memperbarui spesifik suatu data di penyimpaan.
+ *
+ * @param array dataStoreParams
+ */
+function updated(dataStoreParams) {
   hideAllAlert();
   readData(dataStoreParams);
   setText(captionTable, "Klik data untuk memperbarui!");
 
-  // looping semua data
   for (let i = 0; i < dataInTable.length; i++) {
-    // ketika data yang dipilih diklik show form.
+    // Ketika salah satu data diklik,
+    // tampilkan form dan value dari data yang dipilih.
     dataInTable[i].onclick = function () {
       // ambil index dari data yang ingin diupdate.
-      var indexUser = parseInt(dataInTable[i].firstChild.innerText) - 1;
+      const indexUser = parseInt(dataInTable[i].firstChild.innerText) - 1;
 
-      // hide bagin table dan tampilkan form.
-      // set text untuk button form, menjadi update.
       handlingContent(sectionTable, "none");
       handlingContent(form, "block");
-      setText(buttonForm, "Update");
+
+      setText(buttonForm, "Memperbarui Data");
       setText(titleForm, "Memperbarui data mahasiswa");
 
-      // daftar key yang ada di data.
-      const keyData = ["npm", "nama", "email", "universitas", "jurusan", "ipk"];
+      getOldValue(indexUser);
 
-      // get old value.
-      getOldValue(indexUser, keyData);
-
+      // Melakukan update data atau menampilkan alert warning.
       buttonForm.onclick = function () {
-        // set new value to dataStore
-        setNewValue(indexUser, keyData);
-
-        // jika data yang dipilih mempunyai property lengkap, data disimpan
-        if (!isValueFormAvailable(dataStoreParams[indexUser])) {
+        if (isInputEmpty()) {
           const message = "Form tidak boleh kosong!";
           handlingAlert(alertWarning, message);
           return;
         }
 
-        // data diupdate
+        // Simpan data baru.
+        savingUpdate(indexUser);
+
         const message = "Data berhasil diperbarui!";
         handlingAlert(alertSuccess, message);
 
-        // kosongkan input value
         removeHistoryInput();
 
-        // tampilkan data
+        // Menampilkan data yang sudah di-update.
         readData(dataStoreParams);
-        // updateData(dataStoreParams);
       };
     };
   }
 }
 
-// menghapus data
-function deleteData(dataStoreParams) {
-  // tampilkan data dan ubah text caption table
+/**
+ * Menghapus spesifik suatu data, dari penyimpanan.
+ *
+ * @param array dataStoreParams
+ */
+function deleted(dataStoreParams) {
   hideAllAlert();
   readData(dataStoreParams);
   setText(captionTable, "Klik data untuk menghapus!");
 
-  // looping semua data
   for (let i = 0; i < dataInTable.length; i++) {
-    // ketika data yang dipilih diklik, tampilkan confirm
+    // Ketika salah satu data diklik, tampilkan confirm penghapusan.
     dataInTable[i].onclick = function () {
+      // Jika batal, tetap di penghapusan action.
       const answer = confirm("Hapus data ?");
-      // jika ok lakukan hapus data
-      if (answer === true) {
-        // ambil index data yang ingin dihapus.
-        const userIndex = parseInt(dataInTable[i].firstChild.innerText) - 1;
-
-        // melakukan penghapusan data dari penyimpanan.
-        dataStoreParams.splice(userIndex, 1);
-        dataInTable[i].remove();
-
-        // Tampilkan alert success hapus data.
-        handlingAlert(alertSuccess, "Data berhasil dihapus!");
-
-        // jika isi data 0, hanya jalankan fungsi read data
-        const isDataEmpty = dataStoreParams.length === 0;
-        if (isDataEmpty) {
-          const message = "Data belum ada! Silahkan buat terlebih dahulu.";
-          handlingAlert(alertWarning, message);
-        }
-
-        readData(dataStoreParams);
-        // deleteData(dataStoreParams);
+      if (answer !== true) {
+        deleteData(dataStoreParams);
+        return;
       }
+
+      // ambil index data yang ingin dihapus.
+      const userIndex = parseInt(dataInTable[i].firstChild.innerText) - 1;
+
+      // melakukan penghapusan data dari penyimpanan.
+      dataStoreParams.splice(userIndex, 1);
+
+      handlingAlert(alertSuccess, "Data berhasil dihapus!");
+      readData(dataStoreParams);
     };
   }
 }

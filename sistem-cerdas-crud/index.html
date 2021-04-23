@@ -27,8 +27,8 @@
       </header>
       <div>
         <p>
-          Web ini melakukan operasi <span class="font-weight-bold">CRUD</span> (
-          Create, Read, Update, Delete ) untuk data mahasiswa.
+          Web ini melakukan operasi <b>CRUD</b> ( Create, Read, Update, Delete )
+          untuk data mahasiswa.
         </p>
       </div>
     </div>
@@ -56,7 +56,7 @@
                 <div class="col p-2">
                   <p
                     class="card-text btn btn-primary"
-                    onclick="createData(dataStore)"
+                    onclick="create(dataStore)"
                   >
                     Create Data
                   </p>
@@ -64,10 +64,7 @@
 
                 <!-- Button Read -->
                 <div class="col p-2">
-                  <p
-                    class="card-text btn btn-light"
-                    onclick="readData(dataStore)"
-                  >
+                  <p class="card-text btn btn-light" onclick="read(dataStore)">
                     Read Data
                   </p>
                 </div>
@@ -76,7 +73,7 @@
                 <div class="col p-2">
                   <p
                     class="card-text btn btn-success"
-                    onclick="updateData(dataStore)"
+                    onclick="updated(dataStore)"
                   >
                     Update Data
                   </p>
@@ -86,12 +83,13 @@
                 <div class="col p-2">
                   <p
                     class="card-text btn btn-danger"
-                    onclick="deleteData(dataStore)"
+                    onclick="deleted(dataStore)"
                   >
                     Delete Data
                   </p>
                 </div>
               </div>
+              <!-- Akhir List Button CRUD -->
             </div>
           </div>
 
@@ -145,7 +143,6 @@
           <!-- Akhir Table Data -->
 
           <!-- Form create dan update data -->
-          <!-- ===== Form Create Mahasiswa ===== -->
           <form class="hide py-5" id="form">
             <!-- Title Form -->
             <div class="mb-3">
@@ -161,8 +158,7 @@
                   class="form-control"
                   id="npm"
                   name="npm"
-                  placeholder="197064516017"
-                  required
+                  placeholder="Masukan NPM"
                 />
               </div>
             </div>
@@ -176,8 +172,7 @@
                   class="form-control"
                   id="name"
                   name="nama"
-                  placeholder="John Mayer"
-                  required
+                  placeholder="Masukan Nama"
                 />
               </div>
             </div>
@@ -191,8 +186,7 @@
                   class="form-control"
                   id="email"
                   name="email"
-                  placeholder="example@gmail.com"
-                  required
+                  placeholder="Masukan Email"
                 />
               </div>
             </div>
@@ -208,8 +202,7 @@
                   class="form-control"
                   id="universitas"
                   name="universitas"
-                  placeholder="Universitas Nasional"
-                  required
+                  placeholder="Masukan Nama Universitas"
                 />
               </div>
             </div>
@@ -225,8 +218,7 @@
                   class="form-control"
                   id="jurusan"
                   name="jurusan"
-                  placeholder="Informatika"
-                  required
+                  placeholder="Masukan Nama Jurusan"
                 />
               </div>
             </div>
@@ -240,8 +232,8 @@
                   class="form-control"
                   id="ipk"
                   name="ipk"
-                  placeholder="4.0"
-                  required
+                  placeholder="Masukan IPK"
+                  step="any"
                 />
               </div>
             </div>
@@ -288,7 +280,9 @@
               >
             </li>
             <li class="list-group-item">
-              <a href="https://github.com/bentarraharja" target="_blank">BentarRaharja</a>
+              <a href="https://github.com/bentarraharja" target="_blank"
+                >BentarRaharja</a
+              >
             </li>
           </ul>
         </div>
