@@ -212,7 +212,7 @@ function create(dataStoreParams) {
     removeHistoryInput();
 
     // tampilkan data dan alert success.
-    readData(dataStoreParams);
+    read(dataStoreParams);
     handlingAlert(alertSuccess, "Data berhasil dibuat!");
   };
 
@@ -285,7 +285,7 @@ function read(dataStoreParams) {
  */
 function updated(dataStoreParams) {
   hideAllAlert();
-  readData(dataStoreParams);
+  read(dataStoreParams);
   setText(captionTable, "Klik data untuk memperbarui!");
 
   for (let i = 0; i < dataInTable.length; i++) {
@@ -320,7 +320,7 @@ function updated(dataStoreParams) {
         removeHistoryInput();
 
         // Menampilkan data yang sudah di-update.
-        readData(dataStoreParams);
+        read(dataStoreParams);
       };
     };
   }
@@ -333,7 +333,7 @@ function updated(dataStoreParams) {
  */
 function deleted(dataStoreParams) {
   hideAllAlert();
-  readData(dataStoreParams);
+  read(dataStoreParams);
   setText(captionTable, "Klik data untuk menghapus!");
 
   for (let i = 0; i < dataInTable.length; i++) {
@@ -342,7 +342,7 @@ function deleted(dataStoreParams) {
       // Jika batal, tetap di penghapusan action.
       const answer = confirm("Hapus data ?");
       if (answer !== true) {
-        deleteData(dataStoreParams);
+        deleted(dataStoreParams);
         return;
       }
 
@@ -353,7 +353,7 @@ function deleted(dataStoreParams) {
       dataStoreParams.splice(userIndex, 1);
 
       handlingAlert(alertSuccess, "Data berhasil dihapus!");
-      readData(dataStoreParams);
+      read(dataStoreParams);
     };
   }
 }
